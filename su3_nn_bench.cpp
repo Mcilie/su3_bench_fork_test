@@ -11,9 +11,7 @@
 #include <complex>
 #include <chrono>
 typedef std::chrono::system_clock Clock;
-#ifdef USE_OPENMP
-  #include <omp.h>
-#endif
+
 
 #ifndef ITERATIONS
 #  define ITERATIONS 100
@@ -122,10 +120,6 @@ void make_lattice(site *s, size_t n, Complx val) {
 // Include the programming model specific function for su3_mat_nn()
 #ifdef USE_CUDA
   #include "mat_nn_cuda.hpp"
-#elif  USE_OPENMP
-  #include "mat_nn_openmp.hpp"
-#elif  USE_OPENMP_CPU
-  #include "mat_nn_openmp2.hpp"
 #elif  USE_OPENACC
   #include "mat_nn_openacc.hpp"
 #elif  USE_OPENCL
@@ -201,9 +195,7 @@ int main(int argc, char **argv)
   std::vector<site> c(total_sites);
 #endif
 
-#ifdef USE_OPENMP_CPU
-  first_touch(a.data(), b.data(), c.data(), total_sites);
-#endif
+
 
   // initialize the lattices
   make_lattice(a.data(), ldim, Complx{1.0,0.0});
